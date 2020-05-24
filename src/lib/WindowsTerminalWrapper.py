@@ -38,8 +38,12 @@ class WindowsTerminalWrapper:
         if not profiles:
             return []
 
+        # the profile list can be 'profiles' itself, or nested under 'list'
+        profilesList = profiles.get("list", []) \
+            if isinstance(profiles, dict) else profiles
+
         return [
-            p for p in profiles.get("list", []) if p.get('hidden', False) == False
+            p for p in profilesList if p.get('hidden', False) == False
         ]
 
     def openprofile(self, guid):
