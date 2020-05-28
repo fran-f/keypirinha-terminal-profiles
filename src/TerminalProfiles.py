@@ -17,6 +17,7 @@ class TerminalProfiles(kp.Plugin):
     terminal = None
     default_icon = None
     profile_prefix = None
+    use_profile_icons = False
 
     def on_start(self):
         self._load_settings()
