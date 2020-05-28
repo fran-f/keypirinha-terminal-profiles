@@ -12,6 +12,17 @@ class TerminalProfiles(kp.Plugin):
     Add catalog items for all the profiles configured in Windows Terminal.
     """
 
+    ACTION_OPEN = {
+        'name' : "wt.open",
+        'label' : "Open",
+        'short_desc' : "Open this profile in a new window"
+    }
+    ACTION_ELEVATE = {
+        'name' : "wt.elevate",
+        'label' : "Run as Administrator",
+        'short_desc' : "Open this profile in a new window with elevated privileges"
+    }
+
     ICON_POSTFIX = ".scale-200.png"
 
     terminal = None
@@ -22,6 +33,12 @@ class TerminalProfiles(kp.Plugin):
     def on_start(self):
         self._load_settings()
         self._set_up()
+
+        actions = [self.ACTION_OPEN, self.ACTION_ELEVATE]
+        self.set_actions(
+            kp.ItemCategory.REFERENCE,
+            [self.create_action(**a) for a in actions]
+        )
 
     def on_events(self, flags):
         if flags & kp.Events.PACKCONFIG:
@@ -38,7 +55,9 @@ class TerminalProfiles(kp.Plugin):
         ])
 
     def on_execute(self, item, action):
-        self.terminal.openprofile(item.target())
+        is_elevate = action is not None and \
+            action.name() == self.ACTION_ELEVATE['name']
+        self.terminal.openprofile(item.target(), is_elevate)
 
     def on_suggest(self, user_input, items_chain):
         pass

@@ -46,5 +46,12 @@ class WindowsTerminalWrapper:
             p for p in profilesList if p.get('hidden', False) == False
         ]
 
-    def openprofile(self, guid):
-        kpu.shell_execute(self._wt_executable, args=[ '--profile', guid ])
+    def openprofile(self, guid, elevate = False):
+        if elevate:
+            kpu.shell_execute(
+                    "cmd.exe",
+                    args = [ '/c', 'start', '', '/b', self._wt_executable, '--profile', guid ],
+                    verb = "runas"
+            )
+        else:
+            kpu.shell_execute(self._wt_executable, args = [ '--profile', guid ])

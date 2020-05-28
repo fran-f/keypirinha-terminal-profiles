@@ -4,6 +4,8 @@ This is a plugin for the [Keypirinha](http://keypirinha.com) launcher, which add
 for all profiles defined in the [Windows Terminal](https://github.com/microsoft/terminal/)
 configuration. Launching any of these items will open a new terminal with the chosen profile.
 
+Hit `Tab` for extra options, including opening a profile as Administrator.
+
 ![Screenshot of the plugin in action](.github/keypirinha-terminal-profiles.png)
 
 ## Download and installation
