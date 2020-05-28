@@ -76,7 +76,6 @@ class TerminalProfiles(kp.Plugin):
         """
         guid = profile.get("guid")
         icon = profile.get("icon", None)
-        self.log("Using icon? %s" % self.use_profile_icons)
         icon_handle = self._load_profile_icon(icon, guid) \
                 if self.use_profile_icons else None
 
