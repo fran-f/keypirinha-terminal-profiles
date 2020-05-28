@@ -88,6 +88,9 @@ class TerminalProfiles(kp.Plugin):
         )
 
     def _load_profile_icon(self, icon, guid):
+        """
+        Attempt to load an icon for the given profile.
+        """
         iconfile = None
         if not icon:
             # check if this is a default profile
@@ -114,6 +117,7 @@ class TerminalProfiles(kp.Plugin):
 
     def _resource(self, filename):
         return "res://Terminal-Profiles/resources/" + filename
+
 
 class PluginSettings:
 
