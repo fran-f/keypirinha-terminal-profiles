@@ -32,7 +32,7 @@ class WindowsTerminalWrapper:
 
     def profiles(self):
         with kpu.chardet_open(self._wt_settings, mode="rt") as terminal_settings:
-            data = json.loads(jsmin(terminal_settings.getvalue()))
+            data = json.loads(jsmin(terminal_settings.read()))
 
         profiles = data.get("profiles")
         if not profiles:
