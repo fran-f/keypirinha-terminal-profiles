@@ -92,13 +92,18 @@ class TerminalProfiles(kp.Plugin):
         Return a catalog item for a profile.
         """
         guid = profile.get("guid")
+        name = profile.get("name")
+        if not guid or not name:
+            self.warn("Skipping invalid profile with name:'%s' guid:'%s'" % (name, guid))
+            return
+
         icon = profile.get("icon", None)
         icon_handle = self._load_profile_icon(icon, guid) \
                 if self.use_profile_icons else None
 
         return self.create_item(
                 category = kp.ItemCategory.REFERENCE,
-                label = self.profile_prefix + profile.get("name"),
+                label = self.profile_prefix + name,
                 short_desc = "Open a new terminal",
                 icon_handle = icon_handle,
                 target = guid,
