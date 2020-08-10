@@ -1,25 +1,18 @@
-#
-# Windows Terminal wrapper class
-# More info at https://github.com/fran-f/keypirinha-terminal-profiles
-#
+"""
+Windows Terminal wrapper class
+More info at https://github.com/fran-f/keypirinha-terminal-profiles
+"""
 
-import keypirinha_util as kpu
+# Disable warning for relative import statements
+# pylint: disable=import-error, relative-beyond-top-level
 
 import json
 import os
+
+import keypirinha_util as kpu
 from .jsmin import jsmin
 
 class WindowsTerminalWrapper:
-
-    LOCALAPPDATA = kpu.shell_known_folder_path("{f1b32785-6fba-4fcf-9d55-7b8e7f157091}")
-
-    def settings_file():
-        terminal_package = "Microsoft.WindowsTerminal_8wekyb3d8bbwe"
-        return WindowsTerminalWrapper.LOCALAPPDATA + \
-            "\\Packages\\" + terminal_package + "\\LocalState\\settings.json"
-
-    def executable():
-        return WindowsTerminalWrapper.LOCALAPPDATA + "\\Microsoft\\WindowsApps\\wt.exe"
 
     def __init__(self, settings, executable):
         if not os.path.exists(settings):
@@ -39,19 +32,19 @@ class WindowsTerminalWrapper:
             return []
 
         # the profile list can be 'profiles' itself, or nested under 'list'
-        profilesList = profiles.get("list", []) \
+        profiles_list = profiles.get("list", []) \
             if isinstance(profiles, dict) else profiles
 
         return [
-            p for p in profilesList if p.get('hidden', False) == False
+            p for p in profiles_list if p.get('hidden', False) == False
         ]
 
-    def openprofile(self, guid, elevate = False):
+    def openprofile(self, guid, elevate=False):
         if elevate:
             kpu.shell_execute(
-                    "cmd.exe",
-                    args = [ '/c', 'start', '', '/b', self._wt_executable, '--profile', guid ],
-                    verb = "runas"
+                "cmd.exe",
+                args=['/c', 'start', '', '/b', self._wt_executable, '--profile', guid],
+                verb="runas"
             )
         else:
-            kpu.shell_execute(self._wt_executable, args = [ '--profile', guid ])
+            kpu.shell_execute(self._wt_executable, args=['--profile', guid])
