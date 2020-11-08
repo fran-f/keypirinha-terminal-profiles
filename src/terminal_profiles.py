@@ -8,6 +8,7 @@ More info at https://github.com/fran-f/keypirinha-terminal-profiles
 
 import os
 import sys
+import shutil
 
 import keypirinha as kp
 import keypirinha_util as kpu
@@ -149,9 +150,14 @@ class TerminalProfiles(kp.Plugin):
         else:
             # could it be an external file?
             try:
-                return self.load_icon(icon)
-            except ValueError:
-                pass
+                # External files cannot be loaded as icon, so we try to copy it
+                # to the plugin's cache directory, and load it from there.
+                cache_dir = self.get_package_cache_path(True)
+                icon_file = guid + ".ico"
+                shutil.copyfile(os.path.expandvars(icon), cache_dir + "\\" + icon_file)
+                return self.load_icon("cache://Terminal-Profiles/" + icon_file)
+            except (ValueError, FileNotFoundError):
+                self.warn("Cannot load icon '%s' for profile %s" % (icon, guid))
 
         return None
 
