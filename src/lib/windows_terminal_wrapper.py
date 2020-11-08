@@ -25,7 +25,12 @@ class WindowsTerminalWrapper:
 
     def profiles(self):
         with kpu.chardet_open(self._wt_settings, mode="rt") as terminal_settings:
-            data = json.loads(jsmin(terminal_settings.read()))
+            # remove comments and whitespace
+            settings = jsmin(terminal_settings.read())
+            # remove commas from last properties
+            settings = settings.replace(",}", "}").replace(",]", "]")
+
+            data = json.loads(settings)
 
         profiles = data.get("profiles")
         if not profiles:
