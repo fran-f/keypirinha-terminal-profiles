@@ -154,9 +154,10 @@ class TerminalProfiles(kp.Plugin):
                 # to the plugin's cache directory, and load it from there.
                 cache_dir = self.get_package_cache_path(True)
                 icon_file = guid + ".ico"
-                shutil.copyfile(os.path.expandvars(icon), cache_dir + "\\" + icon_file)
+                source = icon[8:] if icon[0:8] == "file:///" else os.path.expandvars(icon)
+                shutil.copyfile(source, cache_dir + "\\" + icon_file)
                 return self.load_icon("cache://Terminal-Profiles/" + icon_file)
-            except (ValueError, FileNotFoundError):
+            except (ValueError, FileNotFoundError, OSError):
                 self.warn("Cannot load icon '%s' for profile %s" % (icon, guid))
 
         return None
