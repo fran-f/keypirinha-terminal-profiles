@@ -207,7 +207,7 @@ class PluginSettings:
             prefix = self._get(section_name, "prefix", "Windows Terminal (%s)" % (instance_name))
             app_package = self._get(section_name, "app_package")
 
-            if not self._package_exists(app_package):
+            if app_package and not self._package_exists(app_package):
                 self._logger.info(
                     "Skipping '%s', package %s does not exist" % (instance_name, app_package)
                 )
