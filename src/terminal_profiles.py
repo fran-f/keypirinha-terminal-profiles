@@ -24,6 +24,11 @@ class TerminalProfiles(kp.Plugin):
         'label' : "Open",
         'short_desc' : "Open this profile in a new window"
     }
+    ACTION_OPEN_NEW_TAB = {
+        'name' : "wt.open_new_tab",
+        'label' : "Open new tab",
+        'short_desc' : "Open this profile in a new tab of an existing window"
+    }
     ACTION_ELEVATE = {
         'name' : "wt.elevate",
         'label' : "Run as Administrator",
@@ -43,7 +48,11 @@ class TerminalProfiles(kp.Plugin):
         self._load_settings()
         self._set_up()
 
-        actions = [self.ACTION_OPEN, self.ACTION_ELEVATE]
+        actions = [
+            self.ACTION_OPEN,
+            self.ACTION_OPEN_NEW_TAB,
+            self.ACTION_ELEVATE,
+        ]
         self.set_actions(
             kp.ItemCategory.REFERENCE,
             [self.create_action(**a) for a in actions]
@@ -72,9 +81,16 @@ class TerminalProfiles(kp.Plugin):
         [instance, _, profile] = item.target().partition(self.INSTANCE_SEPARATOR)
         terminal = self.terminal_instances[instance]["wrapper"]
 
-        is_elevate = action is not None and \
-            action.name() == self.ACTION_ELEVATE['name']
-        terminal.openprofile(profile, is_elevate)
+        if action is None:
+            terminal.openprofile(profile)
+            return
+
+        if action.name() == self.ACTION_ELEVATE['name']:
+            terminal.openprofile(profile, elevate=True)
+        elif action.name() == self.ACTION_OPEN_NEW_TAB['name']:
+            terminal.opennewtab(profile)
+        else:
+            terminal.openprofile(profile)
 
     def on_suggest(self, user_input, items_chain):
         """Respond to on_suggest Keypirinha messages"""

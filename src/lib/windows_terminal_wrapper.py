@@ -53,3 +53,6 @@ class WindowsTerminalWrapper:
             )
         else:
             kpu.shell_execute(self._wt_executable, args=['--profile', guid])
+
+    def opennewtab(self, guid):
+        kpu.shell_execute(self._wt_executable, args=['--window', '0', '--profile', guid])
